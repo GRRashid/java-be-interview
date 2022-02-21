@@ -1,0 +1,51 @@
+plugins {
+    id "io.spring.dependency-management" version "${springDependencyManagement}"
+    id "org.springframework.boot" version "${springBootVersion}"
+}
+
+allprojects {
+
+    group = "com.devexperts"
+    version = "${version}"
+
+    apply plugin: "java"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "org.springframework.boot"
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    compileJava {
+        sourceCompatibility = 11
+        targetCompatibility = 11
+    }
+
+    bootJar {
+        enabled = true
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        implementation "org.springframework.boot:spring-boot-starter-web"
+        implementation "org.springframework.boot:spring-boot-starter-actuator"
+
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+        testImplementation(enforcedPlatform("org.junit:junit-bom:$junitVersion")) // JUnit 5 BOM
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+        testRuntimeOnly "org.junit.platform:junit-platform-engine:$junitPlatformVersion"
+        testRuntimeOnly "org.junit.platform:junit-platform-commons:$junitPlatformVersion"
+
+        implementation "org.postgresql:postgresql:${postgresqlDriverVersion}"
+
+        testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
+        testImplementation "org.testcontainers:postgresql:$testContainersVersion"
+
+        implementation fileTree("libs")
+    }
+}
